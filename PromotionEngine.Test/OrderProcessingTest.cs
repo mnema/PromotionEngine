@@ -97,7 +97,7 @@ namespace PromotionEngine.Test
 
         //multiple items without Promotion
         [Test]
-        public void Basket_WhenMultiple_ReturnsResult()
+        public void Basket_WhenMultipleItems_ReturnsResult()
         {
             //Arrange
             List<ItemModel> items = new List<ItemModel> 
@@ -116,7 +116,7 @@ namespace PromotionEngine.Test
         }
 
         [Test]
-        public void Basket_WhenProductIsMultiple2_ReturnsResult()
+        public void Basket_WhenMultipleItems2_ReturnsResult()
         {
             //Arrange
             List<ItemModel> items = new List<ItemModel> 
@@ -157,7 +157,7 @@ namespace PromotionEngine.Test
         }
 
         [Test]
-        public void Basket_WhenMultiGroupSave_Returns()
+        public void Basket_WhenMultiGroupSave_ReturnsExpectedResult()
         {
             //Arrange
             List<ItemModel> items = new List<ItemModel> 
