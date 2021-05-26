@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine2.DataAccess.DataModels
+namespace PromotionEngine.DataAccess.DataModels
 {
     public class GroupSavePromotion
     {

@@ -1,11 +1,11 @@
-﻿using PromotionEngine2.DataAccess.DataModels;
+﻿using PromotionEngine.DataAccess.DataModels;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine2.DataAccess.Contracts
+namespace PromotionEngine.DataAccess.Contracts
 {
     public interface IPromotionProvider
     {

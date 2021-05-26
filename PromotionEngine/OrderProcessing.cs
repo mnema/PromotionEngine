@@ -1,15 +1,15 @@
 ﻿using Newtonsoft.Json;
-using PromotionEngine2.Contracts;
-using PromotionEngine2.DataAccess.Contracts;
-using PromotionEngine2.DataAccess.DataModels;
-using PromotionEngine2.Models;
+using PromotionEngine.Contracts;
+using PromotionEngine.DataAccess.Contracts;
+using PromotionEngine.DataAccess.DataModels;
+using PromotionEngine.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine2
+namespace PromotionEngine
 {
     public class OrderProcessing : IOrderProcessing   
     {

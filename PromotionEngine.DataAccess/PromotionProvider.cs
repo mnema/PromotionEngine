@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
-using PromotionEngine2.DataAccess.Contracts;
-using PromotionEngine2.DataAccess.DataModels;
+using PromotionEngine.DataAccess.Contracts;
+using PromotionEngine.DataAccess.DataModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine2.DataAccess
+namespace PromotionEngine.DataAccess
 {
     public class PromotionProvider : IPromotionProvider
     {

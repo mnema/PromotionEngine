@@ -1,10 +1,10 @@
-﻿using PromotionEngine2.Models;
+﻿using PromotionEngine.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine2.Contracts
+namespace PromotionEngine.Contracts
 {
     public interface IOrderProcessing
     {

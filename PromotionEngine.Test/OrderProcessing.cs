@@ -1,14 +1,14 @@
 using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using PromotionEngine2.Contracts;
-using PromotionEngine2.DataAccess.Contracts;
-using PromotionEngine2.DataAccess.DataModels;
-using PromotionEngine2.Models;
+
+using PromotionEngine.DataAccess.Contracts;
+using PromotionEngine.DataAccess.DataModels;
+using PromotionEngine.Models;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PromotionEngine2.Test
+namespace PromotionEngine.Test
 {
     [TestFixture]
     public class Tests
@@ -35,11 +35,13 @@ namespace PromotionEngine2.Test
         [TearDown]
         public void TestCleanUp()
         {
-            mockPromotionProvider = null;          
+            mockPromotionProvider = null;
+            orderProcessing = null;
+            promotionModel = null;
         }
 
         [Test]
-      
+        
         public void Basket_WhenProducts0_Returns0()
         {
             //Arrange
@@ -53,13 +55,22 @@ namespace PromotionEngine2.Test
             Assert.AreEqual(0, totalPrice);
            
         }
-
-        [Test]
-        public void Basket_WhenProductIsA_Returns50()
+      
+        [TestCase("A",1,50)]
+        [TestCase("B", 1, 30)]
+        [TestCase("C", 1, 20)]
+        [TestCase("D", 1, 15)]
+        [TestCase("A", 2, 100)]
+        [TestCase("C", 2, 40)]
+        [TestCase("D", 2, 30)]
+        public void Basket_WhenProductIsA_Returns50(string SKU, int quantity, double result)
         {
             //Arrange
           
-            List<Item> items = new List<Item> { new Item { SKU = "A", Quantity = 1 } };
+            List<Item> items = new List<Item> 
+            { 
+                new Item { SKU = SKU, Quantity = quantity }
+            };
 
             //Act
 
@@ -67,117 +78,18 @@ namespace PromotionEngine2.Test
 
             //Assert
 
-            Assert.AreEqual(50, totalPrice);
+            Assert.AreEqual(result, totalPrice);
+        }  
+  
 
-        }
-
-        [Test]
-        public void Basket_WhenProductIsB_Returns30()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "B", Quantity = 1 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(30, totalPrice);
-
-        }
-
-
-        [Test]
-        public void Basket_WhenProductIsC_Returns20()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "C", Quantity = 1 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(20, totalPrice);
-
-        }
-
-        [Test]
-        public void Basket_WhenProductIsD_Returns15()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "D", Quantity = 1 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(15, totalPrice);
-
-        }
-
-        // N quantity
-        [Test]
-        public void Basket_WhenProductIs2A_Returns100()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "A", Quantity = 2 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(100, totalPrice);
-
-        }
-
- 
-
-        [Test]
-        public void Basket_WhenProductIs2C_Returns40()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "C", Quantity = 2 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(40, totalPrice);
-
-        }
-
-        [Test]
-        public void Basket_WhenProductIs2D_Returns30()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "D", Quantity = 2 } };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(30, totalPrice);
-
-        }
-
-        //multiple items
+        //multiple items without Promotion
         [Test]
         public void Basket_WhenProductIsMultiple_ReturnsResult()
         {
-
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "D", Quantity = 2 },
+            List<Item> items = new List<Item> 
+            {
+                new Item { SKU = "D", Quantity = 2 },
                 new Item { SKU = "A", Quantity = 5 }
             };
 
@@ -188,14 +100,15 @@ namespace PromotionEngine2.Test
             //Assert
 
             Assert.AreEqual(260, totalPrice);
-
         }
 
         [Test]
         public void Basket_WhenProductIsMultiple2_ReturnsResult()
         {
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "A", Quantity = 2 },
+            List<Item> items = new List<Item> 
+            { 
+                new Item { SKU = "A", Quantity = 2 },
                 new Item { SKU = "C", Quantity = 1 }
             };
 
@@ -209,12 +122,18 @@ namespace PromotionEngine2.Test
 
         }
 
-        //Promotions
-        [Test]
-        public void Basket_WhenProductIs3A_Returns130()
+        // Group Save Promotions
+       
+        [TestCase("A", 3, 130)]
+        [TestCase("B", 2, 45)]
+        [TestCase("B", 5, 120)]
+        public void Basket_WhenProductIs3A_Returns130(string SKU, int quantity, double result)
         {
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "A", Quantity = 3 }};
+            List<Item> items = new List<Item>
+            {
+                new Item { SKU = SKU, Quantity = quantity }
+            };
 
             //Act
 
@@ -222,15 +141,18 @@ namespace PromotionEngine2.Test
 
             //Assert
 
-            Assert.AreEqual(130, totalPrice);
-
+            Assert.AreEqual(result, totalPrice);
         }
 
         [Test]
-        public void Basket_WhenProductIs2B_Returns45()
+        public void Basket_WhenMultiGroupSave_Returns()
         {
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "B", Quantity = 2 } };
+            List<Item> items = new List<Item> 
+            {
+                new Item { SKU = "B", Quantity = 5 },
+                new Item { SKU = "A",Quantity=5 }
+            };
 
             //Act
 
@@ -238,15 +160,20 @@ namespace PromotionEngine2.Test
 
             //Assert
 
-            Assert.AreEqual(45, totalPrice);
-
+            Assert.AreEqual(350, totalPrice);
         }
 
-        [Test]
-        public void Basket_WhenProductIs2Bmultiple_Returns()
+        //ComboPromotion     
+        [TestCase("C", 1,"D", 1, 30)]
+        [TestCase("C", 2, "D", 1, 50)]
+        public void Basket_WhenDefault_ReturnsResult(string SKU1, int quantity1, string SKU2, int quantity2, double result)
         {
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "B", Quantity = 5 } };
+            List<Item> items = new List<Item> 
+            { 
+                new Item { SKU = SKU1, Quantity = quantity1 },
+                new Item{ SKU = SKU2,Quantity=quantity2} 
+            };
 
             //Act
 
@@ -254,67 +181,21 @@ namespace PromotionEngine2.Test
 
             //Assert
 
-            Assert.AreEqual(120, totalPrice);
-        }
+            Assert.AreEqual(result, totalPrice);
+
+        }  
 
         [Test]
-        public void Basket_WhenProductIs2B5A_Returns()
+        public void Basket_WhenMultiple_ReturnResult()
         {
             //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "B", Quantity = 5 },
-            new Item{ SKU = "A",Quantity=5} };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(120+230, totalPrice);
-
-        }
-
-        //ComboPromotion
-        [Test]
-        public void Basket_WhenProduct1C1D_Returns30()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "C", Quantity = 1 },
-            new Item{ SKU = "D",Quantity=1} };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(30, totalPrice);
-
-        }
-
-        [Test]
-        public void Basket_WhenProduct2C1D_Returns30()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "C", Quantity = 2 },
-            new Item{ SKU = "D",Quantity=1} };
-
-            //Act
-
-            var totalPrice = orderProcessing.GetTotalPrice(items);
-
-            //Assert
-
-            Assert.AreEqual(50, totalPrice);
-
-        }
-
-        [Test]
-        public void Basket_WhenProductGeneric()
-        {
-            //Arrange
-            List<Item> items = new List<Item> { new Item { SKU = "C", Quantity = 2 },
-            new Item{ SKU = "D",Quantity=1}, new Item { SKU = "A", Quantity = 4 } , new Item { SKU = "B", Quantity = 3 } };
+            List<Item> items = new List<Item> 
+            { 
+                new Item { SKU = "C", Quantity = 2 },
+                new Item{ SKU = "D",Quantity=1}, 
+                new Item { SKU = "A", Quantity = 4 } ,
+                new Item { SKU = "B", Quantity = 3 } 
+            };
 
             //Act
 
