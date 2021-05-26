@@ -1,0 +1,23 @@
+{
+  "GroupSavePromotions": [
+    {
+      "SKU": "A",
+      "Quantity": "3",
+      "Price": 130
+    },
+    {
+      "SKU": "B",
+      "Quantity": "2",
+      "Price": 45
+    }
+  ],
+
+  "ComboPromotions":
+  [
+    {
+      "SKU1": "C",
+      "SKU2": "D",
+      "Price": 30
+    }
+  ]
+}
