@@ -11,8 +11,7 @@ namespace PromotionEngine
     public class OrderProcessing : IOrderProcessing   
     {
         private readonly IPromotionProvider promotionProvider;
-        private PromotionModel promotionModel;
-   
+        private PromotionModel promotionModel;   
 
         public OrderProcessing(IPromotionProvider promotionProvider)
         {
@@ -81,25 +80,25 @@ namespace PromotionEngine
             foreach (var combo in promotionModel.ComboPromotions)
             {
                 var totalNoOfCombo = 0;
-                int SKU1Quantity = 0;
-                int SKU2Quantity = 0;
+                int sku1Quantity = 0;
+                int sku2Quantity = 0;
 
-                //check if items are eligible combo
+                //check if items are eligible for combo
                 if (items.Any(x => x.SKU == combo.SKU1) && items.Any(x => x.SKU == combo.SKU2))
                 {
-                    SKU1Quantity = items.Where(w => w.SKU == combo.SKU1).FirstOrDefault().Quantity;
-                    SKU2Quantity = items.Where(w => w.SKU == combo.SKU2).FirstOrDefault().Quantity;
+                    sku1Quantity = items.Where(w => w.SKU == combo.SKU1).FirstOrDefault().Quantity;
+                    sku2Quantity = items.Where(w => w.SKU == combo.SKU2).FirstOrDefault().Quantity;
 
-                    if (SKU1Quantity  <= SKU2Quantity)                    
-                        totalNoOfCombo = SKU1Quantity;                    
+                    if (sku1Quantity  <= sku2Quantity)                    
+                        totalNoOfCombo = sku1Quantity;                    
                     else                  
-                        totalNoOfCombo = SKU2Quantity;                 
+                        totalNoOfCombo = sku2Quantity;                 
 
                     //Reduce the quantity of item that are considered for combo
                     items.Where(w => w.SKU == combo.SKU1).FirstOrDefault().Quantity -= totalNoOfCombo;
                     items.Where(w => w.SKU == combo.SKU2).FirstOrDefault().Quantity -= totalNoOfCombo;
 
-                    //calculate combo save Price and any remaining quantities of both items
+                    //calculate combo save Price and price for any remaining quantities of both items
                     totalComboPrice += totalNoOfCombo * combo.Price + items.Where(w => w.SKU == combo.SKU1).FirstOrDefault().Quantity * GetItemPrice(combo.SKU1) + items.Where(w => w.SKU == combo.SKU2).FirstOrDefault().Quantity * GetItemPrice(combo.SKU2);
                     
                     //Remove item from list to avoid duplicate
@@ -116,6 +115,7 @@ namespace PromotionEngine
             return promotionProvider.GetPromotion();
         }
 
+        //should come from DB in real world
         private double GetItemPrice(string sku)
         {
             switch (sku)
