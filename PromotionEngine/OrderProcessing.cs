@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PromotionEngine2
 {
-    public class OrderProcessing : IOrderProcessing
+    public class OrderProcessing : IOrderProcessing   
     {
         private readonly IPromotionProvider promotionProvider;
         private PromotionModel promotion;
