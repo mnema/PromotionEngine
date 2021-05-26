@@ -11,5 +11,6 @@ namespace PromotionEngine.DataAccess.Contracts
     {
         PromotionModel GetPromotion();
 
+       
     }
 }

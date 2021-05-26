@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PromotionEngine.DataAccess
+namespace PromotionEngine.Providers.DataAccess
 {
     public class PromotionProvider : IPromotionProvider
     {
@@ -20,5 +20,6 @@ namespace PromotionEngine.DataAccess
 
             }
         }
+
     }
 }

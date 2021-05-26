@@ -8,6 +8,6 @@ namespace PromotionEngine.Contracts
 {
     public interface IOrderProcessing
     {
-        double GetTotalPrice(List<Item> items);
+        double GetTotalPrice(List<ItemModel> items);
     }
 }
